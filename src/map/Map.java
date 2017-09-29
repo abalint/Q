@@ -9,7 +9,7 @@ public class Map {
 	List<List<Character>> characterList;
 	List<InteractableObject> interactableList;
 	String mapString;
-	String hitBoxCharacterList = "#\\/.|-Q";
+	String hitBoxCharacterList = "#\\/.|-Q@";
 	String npcCharacterList = "Q";
 	
 

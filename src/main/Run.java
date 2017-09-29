@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
+import ai.EnemyAI;
 import display.LaunchWindow;
 import item.Bullet;
 import item.Item;
@@ -50,7 +51,6 @@ public class Run {
 		Player player = new Player();
 		initialSetup(map, board, player);	
 		List<NPC> npcList = NPCSetup(map, board);
-		
 		
 		long gameLaunchTime = Calendar.getInstance().getTimeInMillis();
 		long startLoopTime = Calendar.getInstance().getTimeInMillis();
@@ -90,8 +90,12 @@ public class Run {
 	        		getStatsInConsole(console, player, startLoopTime, updateLoopTime, tickCheck, tickCount, runTimeFormated);
 	        	firstLoop = false;
 	        	updateLoopTime = Calendar.getInstance().getTimeInMillis();
-	        	if(!player.getInInventory())
+	        	if(tickCount % 25 ==0)
+	        	{
+	        		updateNPC(map, npcList, player);
 	        		board.setText(map.getMapString());
+	        	}
+	        	
 	        	
 	        }
 	    }
@@ -163,7 +167,7 @@ public class Run {
 			enemy.setYCoord(y);
 			enemy.setReplacedChar(map.getCharacterList().get(enemy.getYCoord()).get(enemy.getXCoord()));
 			map.getCharacterList().get(enemy.getYCoord()).set(enemy.getXCoord(), enemy.getIcon());//set the enemy icon on the map
-			
+			enemy.setNPCType("enemy");
 			npcList.add(enemy);
 			
 		}//end for
@@ -633,5 +637,19 @@ public class Run {
 		return map;
 	}//end updateBullets
 	
+	public static void updateNPC(Map map, List<NPC> npcList, Player player)
+	{
+		
+		for(NPC npc : npcList)
+		{
+			if(npc.getNPCType().compareTo ("enemy") == 0)
+			{
+				map = EnemyAI.update(map, npc, player);
+			}
+			
+		}//end foreach
+		map.setMapString(convertMapToString(map.getCharacterList()));
+		return;
+	}
 }
 
